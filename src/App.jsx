@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Archive, Clipboard, Copy, Download, Plus, Search, Sparkles, Tag, Trash2, Upload } from 'lucide-react';
+import { Archive, Clipboard, Copy, Plus, Search, Sparkles, Tag, Trash2 } from 'lucide-react';
 
 const STORAGE_KEY = 'prompt-cabinet-items-v1';
 const categories = ['画像生成', '文章', 'SNS', 'アプリUI', '商品ページ', 'その他'];
@@ -108,34 +108,6 @@ export default function App() {
     if (ok) setItems((current) => current.filter((item) => item.id !== id));
   }
 
-  function exportBackup() {
-    const blob = new Blob([JSON.stringify({ version: 1, items }, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `prompt-cabinet-backup-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function importBackup(event) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(String(reader.result));
-        const imported = Array.isArray(data) ? data : data.items;
-        if (!Array.isArray(imported)) throw new Error('Invalid backup');
-        setItems(imported);
-      } catch {
-        alert('バックアップファイルを読み込めませんでした。');
-      }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-  }
-
   return (
     <main className="app-shell">
       <section className="hero-card">
@@ -144,8 +116,6 @@ export default function App() {
         <p>画像生成はしません。うまくいったプロンプトを保存して、探して、もう一度コピーして使うための小さなキャビネットです。</p>
         <div className="hero-actions">
           <button className="primary-button" onClick={() => setShowForm((value) => !value)}><Plus size={18} /> {showForm ? '入力を閉じる' : 'プロンプトをしまう'}</button>
-          <button className="ghost-button" onClick={exportBackup}><Download size={18} /> 書き出し</button>
-          <label className="ghost-button file-button"><Upload size={18} /> 読み込み<input type="file" accept="application/json" onChange={importBackup} /></label>
         </div>
       </section>
 
