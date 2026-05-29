@@ -126,10 +126,24 @@ input, textarea, select {
 textarea { min-height: 132px; resize: vertical; line-height: 1.65; }
 textarea.memo { min-height: 82px; }
 
-.image-picker-row {
+.model-chip-row, .image-picker-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.model-chip {
+  border: 1px solid rgba(89, 64, 36, 0.14);
+  background: #fffaf1;
+  color: #5d4633;
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.model-chip.active {
+  background: #2f2419;
+  color: #fff9ef;
 }
 
 .file-button, .remove-image {
@@ -265,6 +279,11 @@ h2 { margin: 0; font-size: 1.13rem; letter-spacing: -0.03em; }
   padding: 6px 9px;
   font-weight: 800;
   font-size: 0.82rem;
+}
+
+.tag-row .model-tag {
+  background: #2f2419;
+  color: #fff9ef;
 }
 
 .card-actions {
