@@ -1,0 +1,19 @@
+{
+  "name": "Prompt Cabinet",
+  "short_name": "Prompt Cabinet",
+  "description": "使ったプロンプトを保存して、探して、もう一度使うための小さな棚。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8efe7",
+  "theme_color": "#6f4f37",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
