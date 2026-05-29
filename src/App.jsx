@@ -3,6 +3,7 @@ import { Archive, Clipboard, Copy, Image as ImageIcon, Plus, Search, Sparkles, T
 
 const STORAGE_KEY = 'prompt-cabinet-items-v1';
 const categories = ['画像生成', '文章', 'SNS', 'アプリUI', '商品ページ', 'その他'];
+const imageModels = ['GPT', 'Gemini', 'Grok', 'Midjourney', 'その他'];
 const IMAGE_MAX_SIZE = 960;
 const IMAGE_QUALITY = 0.78;
 
@@ -11,6 +12,7 @@ const samplePrompts = [
     id: 'sample-style-1',
     title: '① 繊細・半写実・耽美系',
     category: '画像生成',
+    model: 'GPT',
     tags: ['半写実', '耽美', '低コントラスト', '透明感'],
     prompt: '[subject], delicate semi-realistic anime, porcelain skin, translucent eyes, soft gradients, low contrast, subtle bloom, quiet sky atmosphere',
     memo: '画風の芯：陶器肌／低コントラスト／宝石の瞳／淡い赤み／静かな空気感。避ける語：dramatic, thick outlines, saturated colors。顔の美しさを優先したい時に。',
@@ -22,6 +24,7 @@ const samplePrompts = [
     id: 'sample-style-2',
     title: '② 艶・光・感情強め',
     category: '画像生成',
+    model: 'Gemini',
     tags: ['乙女ゲーム', 'KV', '艶髪', '逆光'],
     prompt: '[subject], otome game key visual, cinematic backlight, glossy hair, defined shading, romantic tension, red eyes, emotional distance',
     memo: '画風の芯：艶髪／逆光／木漏れ日／赤い目元／距離感と恋愛圧。避ける語：minimal shading, airy negative space。乙女ゲーム風キービジュアル向き。',
@@ -33,6 +36,7 @@ const samplePrompts = [
     id: 'sample-style-3',
     title: '③ 透明水彩・日常挿絵',
     category: '画像生成',
+    model: 'Midjourney',
     tags: ['透明水彩', '日常', '紙質感', 'やさしい'],
     prompt: '[subject], transparent watercolor, soft ink lineart, visible paper texture, muted pastel, minimal shading, airy negative space, gentle indoor light',
     memo: '画風の芯：紙の質感／淡彩／にじみ／余白／自然光／やさしい室内。避ける語：glossy, cinematic, polished game art。紙の白と余白で息をする絵に。',
@@ -44,6 +48,7 @@ const samplePrompts = [
     id: 'sample-style-4',
     title: '④ 透明水彩・絵本幻想',
     category: '画像生成',
+    model: 'Grok',
     tags: ['水彩絵本', '幻想', '装飾建築', '発光感'],
     prompt: '[scene], watercolor storybook fantasy, ornamental architecture, pastel aqua, pearl palette, luminous atmosphere, delicate linework, dreamlike sea-palace mood',
     memo: '画風の芯：装飾建築／アクア色／真珠感／珊瑚色／童話の発光感。避ける語：photorealist, 3D render, game background art。世界観・建築・幻想を優先したい時に。',
@@ -53,7 +58,7 @@ const samplePrompts = [
   },
 ];
 
-const blankForm = { title: '', category: '画像生成', tags: '', prompt: '', memo: '', imageData: '' };
+const blankForm = { title: '', category: '画像生成', model: '', customModel: '', tags: '', prompt: '', memo: '', imageData: '' };
 
 function loadItems() {
   try {
@@ -119,7 +124,7 @@ export default function App() {
       .filter((item) => filter === 'すべて' || item.category === filter)
       .filter((item) => {
         if (!lower) return true;
-        return [item.title, item.category, item.prompt, item.memo, ...(item.tags || [])].join(' ').toLowerCase().includes(lower);
+        return [item.title, item.category, item.model, item.prompt, item.memo, ...(item.tags || [])].join(' ').toLowerCase().includes(lower);
       })
       .sort((a, b) => Number(Boolean(b.favorite)) - Number(Boolean(a.favorite)) || new Date(b.createdAt) - new Date(a.createdAt));
   }, [items, query, filter]);
@@ -148,10 +153,12 @@ export default function App() {
   function savePrompt(event) {
     event.preventDefault();
     if (!form.prompt.trim()) return;
+    const modelName = form.model === 'その他' ? form.customModel.trim() : form.model;
     const next = {
       id: crypto.randomUUID(),
       title: form.title.trim() || '無題のプロンプト',
       category: form.category,
+      model: modelName,
       tags: normalizeTags(form.tags),
       prompt: form.prompt.trim(),
       memo: form.memo.trim(),
@@ -195,6 +202,13 @@ export default function App() {
         <form className="prompt-form" onSubmit={savePrompt}>
           <label>タイトル<input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="例：水彩風の表紙画像" /></label>
           <label>用途<select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>{categories.map((category) => <option key={category}>{category}</option>)}</select></label>
+          <label className="wide model-picker">
+            画像生成モデル
+            <div className="model-chip-row">
+              {imageModels.map((model) => <button key={model} type="button" className={form.model === model ? 'model-chip active' : 'model-chip'} onClick={() => setForm({ ...form, model, customModel: model === 'その他' ? form.customModel : '' })}>{model}</button>)}
+            </div>
+            {form.model === 'その他' && <input value={form.customModel} onChange={(e) => setForm({ ...form, customModel: e.target.value })} placeholder="例：Leonardo AI / Firefly / Canva など" />}
+          </label>
           <label>タグ<input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="水彩, 余白, note" /></label>
           <label className="wide image-picker">
             参考画像
@@ -212,7 +226,7 @@ export default function App() {
       )}
 
       <section className="toolbar compact-toolbar">
-        <div className="search-box"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="タイトル・タグ・本文を検索" /></div>
+        <div className="search-box"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="タイトル・タグ・本文・モデルを検索" /></div>
         <div className="chip-row">{['すべて', ...categories].map((chip) => <button key={chip} className={filter === chip ? 'chip active' : 'chip'} onClick={() => setFilter(chip)}>{chip}</button>)}</div>
       </section>
 
@@ -225,11 +239,14 @@ export default function App() {
             <div className="card-body">
               <div className="card-top">
                 <button className={item.favorite ? 'star active' : 'star'} onClick={() => toggleFavorite(item.id)} aria-label="お気に入り"><Sparkles size={18} /></button>
-                <div><h2>{item.title}</h2><p className="date">{item.category} ・ {formatDate(item.createdAt)}</p></div>
+                <div><h2>{item.title}</h2><p className="date">{item.category} ・ {item.model ? `${item.model} ・ ` : ''}{formatDate(item.createdAt)}</p></div>
               </div>
               <p className="prompt-text">{item.prompt}</p>
               {item.memo && <p className="memo-text">{item.memo}</p>}
-              <div className="tag-row">{(item.tags || []).map((tag) => <span key={tag}><Tag size={12} />{tag}</span>)}</div>
+              <div className="tag-row">
+                {item.model && <span className="model-tag">{item.model}</span>}
+                {(item.tags || []).map((tag) => <span key={tag}><Tag size={12} />{tag}</span>)}
+              </div>
               <div className="card-actions">
                 <button onClick={() => copyPrompt(item)}><Copy size={16} /> {copiedId === item.id ? 'コピー済み' : 'コピー'}</button>
                 <button className="danger" onClick={() => deletePrompt(item.id)}><Trash2 size={16} /> 削除</button>
