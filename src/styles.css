@@ -19,14 +19,14 @@ button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
 
 .app-shell {
-  width: min(980px, 100%);
+  width: min(1120px, 100%);
   margin: 0 auto;
   padding: 18px 14px 44px;
 }
 
 .hero-card, .prompt-form, .toolbar, .prompt-card {
   border: 1px solid rgba(89, 64, 36, 0.13);
-  background: rgba(255, 252, 246, 0.86);
+  background: rgba(255, 252, 246, 0.88);
   box-shadow: 0 18px 50px rgba(83, 58, 27, 0.1);
   backdrop-filter: blur(14px);
 }
@@ -68,7 +68,7 @@ h1 {
 }
 
 .hero-card p {
-  max-width: 38rem;
+  max-width: 42rem;
   line-height: 1.8;
   color: #6a5747;
   margin: 0 0 22px;
@@ -126,6 +126,37 @@ input, textarea, select {
 textarea { min-height: 132px; resize: vertical; line-height: 1.65; }
 textarea.memo { min-height: 82px; }
 
+.image-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.file-button, .remove-image {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 900;
+  background: #fff7eb;
+  color: #4b3325;
+  border: 1px solid rgba(75, 51, 37, 0.12);
+}
+
+.remove-image { color: #8b3b23; background: #fff1e8; }
+.image-message { color: #7a604b; font-size: 0.88rem; font-weight: 700; }
+.image-preview {
+  width: min(100%, 360px);
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid rgba(89, 64, 36, 0.15);
+  background: #fffaf1;
+}
+
 .toolbar {
   margin-top: 14px;
   padding: 14px;
@@ -166,8 +197,26 @@ textarea.memo { min-height: 82px; }
   font-weight: 800;
 }
 
-.prompt-list { display: grid; gap: 14px; }
-.prompt-card { border-radius: 26px; padding: 18px; }
+.prompt-list {
+  display: grid;
+  gap: 14px;
+}
+
+.prompt-card {
+  border-radius: 26px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.card-body { padding: 16px; }
+
+.card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #efe0cc;
+}
 
 .card-top {
   display: grid;
@@ -200,6 +249,8 @@ h2 { margin: 0; font-size: 1.13rem; letter-spacing: -0.03em; }
   padding: 14px;
   line-height: 1.7;
   color: #3b2b1f;
+  max-height: 210px;
+  overflow: auto;
 }
 
 .memo-text { margin: 0 0 12px; color: #6e5946; line-height: 1.7; }
@@ -244,4 +295,9 @@ h2 { margin: 0; font-size: 1.13rem; letter-spacing: -0.03em; }
   .prompt-form { grid-template-columns: 1fr 1fr; }
   .wide { grid-column: 1 / -1; }
   .prompt-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1040px) {
+  .prompt-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .prompt-card.has-image { grid-row: span 2; }
 }
