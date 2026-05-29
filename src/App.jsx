@@ -4,6 +4,7 @@ import { Archive, Clipboard, Copy, Image as ImageIcon, Plus, Search, Sparkles, T
 const STORAGE_KEY = 'prompt-cabinet-items-v1';
 const categories = ['画像生成', '文章', 'SNS', 'アプリUI', '商品ページ', 'その他'];
 const imageModels = ['GPT', 'Gemini', 'Grok', 'Midjourney', 'その他'];
+const oldSampleIds = ['sample-style-1', 'sample-style-2', 'sample-style-3', 'sample-style-4'];
 const IMAGE_MAX_SIZE = 960;
 const IMAGE_QUALITY = 0.78;
 
@@ -63,7 +64,16 @@ const blankForm = { title: '', category: '画像生成', model: '', customModel:
 function loadItems() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : samplePrompts;
+    if (!raw) return samplePrompts;
+
+    const storedItems = JSON.parse(raw);
+    if (!Array.isArray(storedItems)) return samplePrompts;
+
+    const hasOldSamples = storedItems.some((item) => oldSampleIds.includes(item.id));
+    if (!hasOldSamples) return storedItems;
+
+    const userItems = storedItems.filter((item) => !oldSampleIds.includes(item.id) && !String(item.id || '').startsWith('sample-basic-'));
+    return [...userItems, ...samplePrompts];
   } catch {
     return samplePrompts;
   }
