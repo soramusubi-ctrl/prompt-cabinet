@@ -113,12 +113,10 @@ export default function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
-  const allTags = useMemo(() => Array.from(new Set(items.flatMap((item) => item.tags || []))).sort(), [items]);
-
   const filteredItems = useMemo(() => {
     const lower = query.trim().toLowerCase();
     return items
-      .filter((item) => filter === 'すべて' || item.category === filter || (item.tags || []).includes(filter))
+      .filter((item) => filter === 'すべて' || item.category === filter)
       .filter((item) => {
         if (!lower) return true;
         return [item.title, item.category, item.prompt, item.memo, ...(item.tags || [])].join(' ').toLowerCase().includes(lower);
@@ -213,9 +211,9 @@ export default function App() {
         </form>
       )}
 
-      <section className="toolbar">
+      <section className="toolbar compact-toolbar">
         <div className="search-box"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="タイトル・タグ・本文を検索" /></div>
-        <div className="chip-row">{['すべて', ...categories, ...allTags.slice(0, 12)].map((chip) => <button key={chip} className={filter === chip ? 'chip active' : 'chip'} onClick={() => setFilter(chip)}>{chip}</button>)}</div>
+        <div className="chip-row">{['すべて', ...categories].map((chip) => <button key={chip} className={filter === chip ? 'chip active' : 'chip'} onClick={() => setFilter(chip)}>{chip}</button>)}</div>
       </section>
 
       <section className="list-header"><span>{filteredItems.length} 件</span><span>この端末内に保存中</span></section>
