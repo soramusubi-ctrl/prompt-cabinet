@@ -214,12 +214,14 @@ textarea.memo { min-height: 82px; }
 .prompt-list {
   display: grid;
   gap: 14px;
+  align-items: start;
 }
 
 .prompt-card {
   border-radius: 26px;
   padding: 0;
   overflow: hidden;
+  align-self: start;
 }
 
 .card-body { padding: 16px; }
@@ -318,5 +320,4 @@ h2 { margin: 0; font-size: 1.13rem; letter-spacing: -0.03em; }
 
 @media (min-width: 1040px) {
   .prompt-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .prompt-card.has-image { grid-row: span 2; }
 }
