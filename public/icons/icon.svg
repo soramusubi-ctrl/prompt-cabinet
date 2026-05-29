@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Prompt Cabinet icon">
+  <defs>
+    <linearGradient id="bg" x1="86" y1="52" x2="430" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff8ed"/>
+      <stop offset="1" stop-color="#d9b78d"/>
+    </linearGradient>
+    <linearGradient id="drawer" x1="150" y1="144" x2="362" y2="392" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8b6446"/>
+      <stop offset="1" stop-color="#4b3325"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <path d="M144 130h224c20 0 36 16 36 36v208c0 20-16 36-36 36H144c-20 0-36-16-36-36V166c0-20 16-36 36-36Z" fill="#fff7ea" stroke="#4b3325" stroke-width="16"/>
+  <path d="M142 170h228v68H142zM142 252h228v68H142zM142 334h228v34c0 8-6 14-14 14H156c-8 0-14-6-14-14z" fill="url(#drawer)"/>
+  <circle cx="256" cy="204" r="12" fill="#ffe5aa"/>
+  <circle cx="256" cy="286" r="12" fill="#ffe5aa"/>
+  <path d="M228 360h56" stroke="#ffe5aa" stroke-width="14" stroke-linecap="round"/>
+  <path d="M386 114l10 28 28 10-28 10-10 28-10-28-28-10 28-10 10-28Z" fill="#fff1b8" stroke="#4b3325" stroke-width="8" stroke-linejoin="round"/>
+</svg>
